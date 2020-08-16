@@ -1,4 +1,4 @@
-const Controller = require("./dist/Controller");
+const Controller = require("./dist/Controller").default;
 
 module.exports = function (RED) {
   function neopixelAnimation(config) {

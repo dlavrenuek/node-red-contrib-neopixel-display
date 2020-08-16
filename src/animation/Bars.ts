@@ -20,14 +20,7 @@ class Bars extends Animation<BarsPayload, BarsOptions> {
   }
 
   show: Show<BarsPayload, BarsOptions> = (values, { backgroundColor, foregroundColor } = {}) => {
-    if (backgroundColor !== undefined && backgroundColor !== this.backgroundColor) {
-      this.backgroundColor = backgroundColor;
-      this.resetFrames = this.resetFramesDefault;
-    }
-    if (foregroundColor !== undefined && foregroundColor !== this.foregroundColor) {
-      this.foregroundColor = foregroundColor;
-      this.resetFrames = this.resetFramesDefault;
-    }
+    this.applyColors(backgroundColor, foregroundColor);
     this.setFrames = this.setFramesDefault;
     this.targetValues = this.targetValues.map((value, index) => (values.length > index ? values[index] : 0));
   };

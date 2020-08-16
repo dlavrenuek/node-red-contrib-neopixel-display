@@ -21,12 +21,7 @@ class Text extends Animation<TextPayload, TextOptions> {
   }
 
   show: Show<TextPayload, TextOptions> = (text, { backgroundColor, foregroundColor, offset = [0, 0] } = {}) => {
-    if (backgroundColor !== undefined) {
-      this.backgroundColor = backgroundColor;
-    }
-    if (foregroundColor !== undefined) {
-      this.foregroundColor = foregroundColor;
-    }
+    this.applyColors(backgroundColor, foregroundColor);
     this.setFrames = this.setFramesDefault;
     if (offset && offset.length === 2) {
       this.offset = this.offset.map((_, index) => offset[index] | 0);

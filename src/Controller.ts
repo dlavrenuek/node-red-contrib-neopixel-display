@@ -90,7 +90,6 @@ class Controller implements ControllerInterface {
       clearTimeout(this.to);
       if (payload && this.current !== null) {
         this.queue = [];
-        //
         // @ts-ignore
         this.current.show(payload, {
           backgroundColor: backgroundColor || this.backgroundColor || undefined,
@@ -103,19 +102,20 @@ class Controller implements ControllerInterface {
   };
 
   animate = () => {
-    const nextFrame = (currentAnimation: NextFrame) => {
+    const runNextFrame = (currentAnimation: NextFrame) => {
       try {
         const nextFrame = currentAnimation();
         if (nextFrame) {
-          this.to = (setTimeout(nextFrame, this.animationTimeout, nextFrame) as unknown) as number;
+          this.to = (setTimeout(runNextFrame, this.animationTimeout, nextFrame) as unknown) as number;
         }
       } catch (e) {
-        console.log(e);
+        console.log('An error occurred during execution', e);
       }
     };
 
     if (this.current !== null) {
-      nextFrame(this.current.nextFrame);
+      console.log(this.current);
+      runNextFrame(this.current.nextFrame);
     }
   };
 

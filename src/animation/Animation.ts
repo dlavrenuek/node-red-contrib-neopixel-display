@@ -35,7 +35,19 @@ abstract class Animation<P, O> implements AnimationInterface<P, O> {
     this.setFrames = this.setFramesDefault;
   }
 
+  applyColors = (backgroundColor?: Color, foregroundColor?: Color) => {
+    if (backgroundColor !== undefined && backgroundColor !== this.backgroundColor) {
+      this.backgroundColor = backgroundColor;
+      this.resetFrames = this.resetFramesDefault;
+    }
+    if (foregroundColor !== undefined && foregroundColor !== this.foregroundColor) {
+      this.foregroundColor = foregroundColor;
+      this.resetFrames = this.resetFramesDefault;
+    }
+  };
+
   nextFrame: NextFrame = () => {};
+
   show: Show<P, O> = () => {};
 }
 

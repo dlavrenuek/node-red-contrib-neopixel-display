@@ -19,7 +19,8 @@ class Line extends Animation<LinePayload, LineOptions> {
     this.targetLength = 0;
   }
 
-  show: Show<LinePayload, LineOptions> = (length) => {
+  show: Show<LinePayload, LineOptions> = (length, { backgroundColor, foregroundColor } = {}) => {
+    this.applyColors(backgroundColor, foregroundColor);
     this.targetLength = Math.max(0, Math.min(this.controller.cols * this.controller.panels, length));
   };
 
