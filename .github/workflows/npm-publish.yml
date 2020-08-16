@@ -23,7 +23,7 @@ jobs:
       run: npm build
 
     - name: Publish if version has been updated
-      uses: pascalgn/npm-publish-action@1.1.3
+      uses: pascalgn/npm-publish-action@1.3.3
       with:
         tag_name: "v%s"
         tag_message: "v%s"
