@@ -38,7 +38,7 @@
                   return RED.validators.number(value) && value > 0;
                 }
             },
-            animationType: {
+            visualizationType: {
                 value: "bars",
                 required: true,
                 validate: function(value) {
@@ -91,8 +91,8 @@
     </div>
     <h3>Visualization</h3>
     <div class="form-row">
-        <label for="node-input-animationType"><i class="fa fa-forward"></i> Visualization type</label>
-        <select id="node-input-animationType">
+        <label for="node-input-visualizationType"><i class="fa fa-forward"></i> Visualization type</label>
+        <select id="node-input-visualizationType">
             <option value="bars">Bar chart</option>
             <option value="line">Line / Progress bar</option>
             <option value="text">Text</option>

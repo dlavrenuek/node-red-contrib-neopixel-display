@@ -9,7 +9,7 @@ export type OutgoingMessage = {
 };
 
 export type GenericIncomingMessage<T, P, O> = {
-  animationType: T;
+  visualizationType: T;
   payload?: P;
 } & O;
 
@@ -42,7 +42,7 @@ type Config = {
   cols: string;
   rows: string;
   fps: string;
-  animationType: 'bars' | 'line' | 'text';
+  visualizationType: 'bars' | 'line' | 'text';
   backgroundColor: string;
   foregroundColor: string;
 };
@@ -59,17 +59,17 @@ class Controller implements ControllerInterface {
   private to: number;
   private qto: number;
   private queue: OutgoingMessage[];
-  private animationType: AnimationTypes;
+  private visualizationType: AnimationTypes;
   private backgroundColor: number[];
   private foregroundColor: number[];
 
-  constructor(node: Node, { panels, cols, rows, fps, backgroundColor, foregroundColor, animationType }: Config) {
+  constructor(node: Node, { panels, cols, rows, fps, backgroundColor, foregroundColor, visualizationType }: Config) {
     this.node = node;
     this.panels = parseInt(panels) || 1;
     this.cols = parseInt(cols) || 8;
     this.rows = parseInt(rows) || 8;
     this.fps = parseInt(fps) || 5;
-    this.animationType = animationType;
+    this.visualizationType = visualizationType;
     this.backgroundColor = this.parseColor(backgroundColor);
     this.foregroundColor = this.parseColor(foregroundColor);
     this.animationTimeout = Math.floor(1000 / this.fps);
@@ -80,8 +80,8 @@ class Controller implements ControllerInterface {
     this.queue = [];
   }
 
-  handleInput = ({ animationType, payload, backgroundColor, foregroundColor, ...options }: IncomingMessage) => {
-    const type = animationType || this.animationType;
+  handleInput = ({ visualizationType, payload, backgroundColor, foregroundColor, ...options }: IncomingMessage) => {
+    const type = visualizationType || this.visualizationType;
     if (type && types.hasOwnProperty(type)) {
       if (this.currentType !== type) {
         this.currentType = type;
