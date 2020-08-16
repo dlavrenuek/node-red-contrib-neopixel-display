@@ -1,0 +1,114 @@
+<script type="text/javascript">
+    function validateColor(colorString) {
+      if (!colorString) return true;
+
+      var colorParts = `${colorString}`.split(',').map((str) => str.trim());
+      return colorParts.length === 3 && colorParts.every((val) => {
+        var intVal = parseInt(val);
+        return !isNaN(intVal) && intVal >= 0 && intVal <= 255;
+      });
+    }
+
+    RED.nodes.registerType('neopixel-display',{
+        category: 'Raspberry Pi',
+        color: '#F2E635',
+        defaults: {
+            name: {
+                value: ""
+            },
+            cols: {
+                value: "8",
+                required: true,
+                validate: RED.validators.number(),
+            },
+            rows: {
+                value: "8",
+                required: true,
+                validate: RED.validators.number(),
+            },
+            panels: {
+                value: "1",
+                required: true,
+                validate: RED.validators.number(),
+            },
+            fps: {
+                value: "5",
+                required: true,
+                validate: function(value) {
+                  return RED.validators.number(value) && value > 0;
+                }
+            },
+            animationType: {
+                value: "bars",
+                required: true,
+                validate: function(value) {
+                  return ["bars", "line", "bars"].includes(value);
+                },
+            },
+            backgroundColor: {
+                value: "0, 0, 0",
+                required: false,
+                validate: validateColor,
+            },
+            foregroundColor: {
+                value: "0, 255, 0",
+                required: false,
+                validate: validateColor,
+            },
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "file.png",
+        label: function () {
+            const { name, cols, rows, panels } = this;
+            return name || `Neopixel ${panels}x${cols}x${rows}`;
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="neopixel-display">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <h3>Panel configuration</h3>
+    <div class="form-row">
+        <label for="node-input-rows"><i class="fa fa-arrows-v"></i> Rows</label>
+        <input type="number" id="node-input-rows" placeholder="Rows">
+    </div>
+    <div class="form-row">
+        <label for="node-input-cols"><i class="fa fa-arrows-h"></i> Cols</label>
+        <input type="number" id="node-input-cols" placeholder="Cols">
+    </div>
+    <div class="form-row">
+        <label for="node-input-panels"><i class="fa fa-columns"></i> Number of connected panels</label>
+        <input type="number" id="node-input-panels" placeholder="Panels">
+    </div>
+    <h3>Controller</h3>
+    <div class="form-row">
+        <label for="node-input-fps"><i class="fa fa-forward"></i> Frames per second</label>
+        <input type="number" id="node-input-fps" placeholder="FPS">
+    </div>
+    <h3>Visualization</h3>
+    <div class="form-row">
+        <label for="node-input-animationType"><i class="fa fa-forward"></i> Visualization type</label>
+        <select id="node-input-animationType">
+            <option value="bars">Bar chart</option>
+            <option value="line">Line / Progress bar</option>
+            <option value="text">Text</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-backgroundColor"><i class="fa fa-forward"></i> Background color</label>
+        <input id="node-input-backgroundColor" placeholder="Background color">
+    </div>
+    <div class="form-row">
+        <label for="node-input-foregroundColor"><i class="fa fa-forward"></i> Foreground color</label>
+        <input id="node-input-foregroundColor" placeholder="Foreground color">
+    </div>
+    <p style="font-size: 0.8em;">Colors are in comma-separated rgb format (<code>255, 0, 0</code> for red, <code>0, 0, 255</code> for blue).</p>
+</script>
+
+<script type="text/html" data-help-name="neopixel-display">
+    <p>Provides animation for neopixel matrix</p>
+</script>
