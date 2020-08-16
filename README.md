@@ -33,7 +33,7 @@ The `neopixel display` node consumes a message with payload and produces a messa
 
 A simple visualization could be configured like following:
 
-![Example](https://github.com/dlavrenuek/node-red-contrib-neopixel-display/examples/node-basic.png "Example configuration")
+![Example](https://raw.githubusercontent.com/dlavrenuek/node-red-contrib-neopixel-display/master/examples/node-basic.png "Example configuration")
 
 The configured options for `Visualization type`, `Background color` and `Foreground color` can be overwritten in the
 message. Available options are:
