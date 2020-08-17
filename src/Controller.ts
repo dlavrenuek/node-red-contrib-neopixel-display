@@ -94,7 +94,7 @@ class Controller implements ControllerInterface {
         this.current.show(payload, {
           backgroundColor: backgroundColor || this.backgroundColor || undefined,
           foregroundColor: foregroundColor || this.foregroundColor || undefined,
-          options,
+          ...options,
         });
         this.animate();
       }
