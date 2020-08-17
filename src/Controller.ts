@@ -114,7 +114,6 @@ class Controller implements ControllerInterface {
     };
 
     if (this.current !== null) {
-      console.log(this.current);
       runNextFrame(this.current.nextFrame);
     }
   };
