@@ -1,9 +1,9 @@
-import Animation, { AnimationOptions, Show } from './Animation';
+import Animation, { AnimationOptions, NextFrame, Show } from './Animation';
 import ControllerInterface from '../ControllerInterface';
 
 export type LinePayload = number;
 
-export type LineOptions = AnimationOptions<{}>;
+export type LineOptions = AnimationOptions<unknown>;
 
 class Line extends Animation<LinePayload, LineOptions> {
   private readonly resetColsPerFrame: number;
@@ -19,12 +19,18 @@ class Line extends Animation<LinePayload, LineOptions> {
     this.targetLength = 0;
   }
 
-  show: Show<LinePayload, LineOptions> = (length, { backgroundColor, foregroundColor } = {}) => {
+  show: Show<LinePayload, LineOptions> = (
+    length,
+    { backgroundColor, foregroundColor } = {},
+  ) => {
     this.applyColors(backgroundColor, foregroundColor);
-    this.targetLength = Math.max(0, Math.min(this.controller.cols * this.controller.panels, length));
+    this.targetLength = Math.max(
+      0,
+      Math.min(this.controller.cols * this.controller.panels, length),
+    );
   };
 
-  nextFrame = () => {
+  nextFrame: NextFrame = () => {
     if (this.resetFrames > 0) {
       this.resetFrame();
 
@@ -36,7 +42,7 @@ class Line extends Animation<LinePayload, LineOptions> {
     }
   };
 
-  resetFrame = () => {
+  resetFrame = (): void => {
     for (let y = 0; y < this.controller.rows; y++) {
       for (let i = 0; i < this.resetColsPerFrame; i++) {
         const x = this.resetFrames * this.resetColsPerFrame - i - 1;
@@ -46,7 +52,7 @@ class Line extends Animation<LinePayload, LineOptions> {
     this.resetFrames--;
   };
 
-  setFrame = () => {
+  setFrame = (): void => {
     if (this.currentLength < this.targetLength) {
       for (let y = 0; y < this.controller.rows; y++) {
         this.controller.setPixel(y, this.currentLength, this.foregroundColor);
