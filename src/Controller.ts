@@ -13,11 +13,23 @@ export type GenericIncomingMessage<T, P, O> = {
   payload?: P;
 } & O;
 
-export type BarsMessage = GenericIncomingMessage<'bars', BarsPayload, BarsOptions>;
+export type BarsMessage = GenericIncomingMessage<
+  'bars',
+  BarsPayload,
+  BarsOptions
+>;
 
-export type LineMessage = GenericIncomingMessage<'line', LinePayload, LineOptions>;
+export type LineMessage = GenericIncomingMessage<
+  'line',
+  LinePayload,
+  LineOptions
+>;
 
-export type TextMessage = GenericIncomingMessage<'text', TextPayload, TextOptions>;
+export type TextMessage = GenericIncomingMessage<
+  'text',
+  TextPayload,
+  TextOptions
+>;
 
 export type IncomingMessage = BarsMessage | LineMessage | TextMessage;
 
@@ -63,7 +75,18 @@ class Controller implements ControllerInterface {
   private backgroundColor: number[];
   private foregroundColor: number[];
 
-  constructor(node: Node, { panels, cols, rows, fps, backgroundColor, foregroundColor, visualizationType }: Config) {
+  constructor(
+    node: Node,
+    {
+      panels,
+      cols,
+      rows,
+      fps,
+      backgroundColor,
+      foregroundColor,
+      visualizationType,
+    }: Config,
+  ) {
     this.node = node;
     this.panels = parseInt(panels) || 1;
     this.cols = parseInt(cols) || 8;
@@ -80,9 +103,15 @@ class Controller implements ControllerInterface {
     this.queue = [];
   }
 
-  handleInput = ({ visualizationType, payload, backgroundColor, foregroundColor, ...options }: IncomingMessage) => {
+  handleInput = ({
+    visualizationType,
+    payload,
+    backgroundColor,
+    foregroundColor,
+    ...options
+  }: IncomingMessage): void => {
     const type = visualizationType || this.visualizationType;
-    if (type && types.hasOwnProperty(type)) {
+    if (type && types[type]) {
       if (this.currentType !== type) {
         this.currentType = type;
         this.current = new types[type](this);
@@ -90,6 +119,7 @@ class Controller implements ControllerInterface {
       clearTimeout(this.to);
       if (payload && this.current !== null) {
         this.queue = [];
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         this.current.show(payload, {
           backgroundColor: backgroundColor || this.backgroundColor || undefined,
@@ -101,12 +131,16 @@ class Controller implements ControllerInterface {
     }
   };
 
-  animate = () => {
+  animate = (): void => {
     const runNextFrame = (currentAnimation: NextFrame) => {
       try {
         const nextFrame = currentAnimation();
         if (nextFrame) {
-          this.to = (setTimeout(runNextFrame, this.animationTimeout, nextFrame) as unknown) as number;
+          this.to = (setTimeout(
+            runNextFrame,
+            this.animationTimeout,
+            nextFrame,
+          ) as unknown) as number;
         }
       } catch (e) {
         console.log('An error occurred during execution', e);
@@ -118,14 +152,19 @@ class Controller implements ControllerInterface {
     }
   };
 
-  convertCoordinates = (row: number, col: number) => {
+  convertCoordinates = (row: number, col: number): number => {
     const panel = Math.floor(col / this.cols);
     const panel_col = col % this.cols;
     return panel * this.cols * this.rows + row * this.cols + panel_col;
   };
 
-  setPixel: SetPixel = (row, col, rgb) => {
-    if (row >= 0 && row < this.rows && col >= 0 && col < this.cols * this.panels) {
+  setPixel: SetPixel = (row, col, rgb): void => {
+    if (
+      row >= 0 &&
+      row < this.rows &&
+      col >= 0 &&
+      col < this.cols * this.panels
+    ) {
       const payload = [this.convertCoordinates(row, col), ...rgb].join(',');
       this.queue.push({
         payload,
@@ -134,16 +173,19 @@ class Controller implements ControllerInterface {
     }
   };
 
-  runQueue = () => {
+  runQueue = (): void => {
     clearTimeout(this.qto);
-    this.queue.splice(0, MAX_PIXELS_PER_TICK).forEach((msg) => this.node.send(msg));
+    this.queue
+      .splice(0, MAX_PIXELS_PER_TICK)
+      .forEach((msg) => this.node.send(msg));
 
     if (this.queue.length > 0) {
       this.qto = (setTimeout(this.runQueue, TICK_TIME) as unknown) as number;
     }
   };
 
-  parseColor = (color: string) => color.split(',').map((value) => parseInt(value.trim()));
+  parseColor = (color: string): number[] =>
+    color.split(',').map((value) => parseInt(value.trim()));
 }
 
 export default Controller;
