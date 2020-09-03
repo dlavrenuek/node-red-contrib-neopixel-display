@@ -32,7 +32,7 @@ jobs:
       run: yarn --frozen-lockfile
 
     - name: Lint
-      run: eslint . --ext .ts
+      run: yarn lint
 
     - name: Test
       run: yarn test
