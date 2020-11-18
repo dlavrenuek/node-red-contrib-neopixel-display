@@ -1,8 +1,8 @@
-import Bars, { BarsOptions, BarsPayload } from './animation/Bars';
-import Line, { LineOptions, LinePayload } from './animation/Line';
-import Text, { TextOptions, TextPayload } from './animation/Text';
-import ControllerInterface, { SetPixel } from './ControllerInterface';
-import { NextFrame } from './animation/Animation';
+import Bars from './animation/Bars';
+import Line from './animation/Line';
+import Text from './animation/Text';
+import ControllerInterface, { Color, SetPixel } from './ControllerInterface';
+import { AnimationInterface, NextFrame } from './animation/Animation';
 
 export type OutgoingMessage = {
   payload: string;
@@ -11,27 +11,9 @@ export type OutgoingMessage = {
 export type GenericIncomingMessage<T, P, O> = {
   visualizationType: T;
   payload?: P;
+  backgroundColor?: Color;
+  foregroundColor?: Color;
 } & O;
-
-export type BarsMessage = GenericIncomingMessage<
-  'bars',
-  BarsPayload,
-  BarsOptions
->;
-
-export type LineMessage = GenericIncomingMessage<
-  'line',
-  LinePayload,
-  LineOptions
->;
-
-export type TextMessage = GenericIncomingMessage<
-  'text',
-  TextPayload,
-  TextOptions
->;
-
-export type IncomingMessage = BarsMessage | LineMessage | TextMessage;
 
 type Node = {
   send: (msg: OutgoingMessage) => unknown;
@@ -103,13 +85,13 @@ class Controller implements ControllerInterface {
     this.queue = [];
   }
 
-  handleInput = ({
+  handleInput = <T extends AnimationTypes, P, O>({
     visualizationType,
     payload,
     backgroundColor,
     foregroundColor,
     ...options
-  }: IncomingMessage): void => {
+  }: GenericIncomingMessage<T, P, O>): void => {
     const type = visualizationType || this.visualizationType;
     if (type && types[type]) {
       if (this.currentType !== type) {
@@ -118,14 +100,17 @@ class Controller implements ControllerInterface {
       }
       clearTimeout(this.to);
       if (payload && this.current !== null) {
-        this.queue = [];
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        this.current.show(payload, {
+        const animationOptions = ({
           backgroundColor: backgroundColor || this.backgroundColor || undefined,
           foregroundColor: foregroundColor || this.foregroundColor || undefined,
           ...options,
-        });
+        } as unknown) as O;
+
+        this.queue = [];
+        ((this.current as unknown) as AnimationInterface<P, O>).show(
+          payload,
+          animationOptions,
+        );
         this.animate();
       }
     }
