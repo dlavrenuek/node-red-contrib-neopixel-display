@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.0.5](https://www.github.com/dlavrenuek/node-red-contrib-neopixel-display/compare/v0.0.4...v0.0.5) (2021-05-12)
+
+
+### Bug Fixes
+
+* fix release workflow ([8750a3c](https://www.github.com/dlavrenuek/node-red-contrib-neopixel-display/commit/8750a3c7b3a7dea051b9184eb5dedb610d25a0ed))
+
 ### [0.0.4](https://www.github.com/dlavrenuek/node-red-contrib-neopixel-display/compare/v0.0.3...v0.0.4) (2021-05-12)
 
 
