@@ -12,7 +12,7 @@
   "digest": {
     "automerge": true
   },
-  "security": {
+  "vulnerabilityAlerts": {
     "automerge": true
   }
 }
